@@ -3,17 +3,21 @@ package model;
 public class ProductVO {
 	private int pNo; 
 	private String pName; 
-	private String pPrice;
-	private String pQty; 
+	private int pPrice;
+	private int pQty; 
 	private String pExpdate;
 	private String pCategory; 
 	private String pSubcategory;
+	private int pCategoryInt; 
+	private int pSubcategoryInt;
 	
+	
+	// Constructor
 	public ProductVO() {
 		super();
 	}
 
-	public ProductVO(int pNo, String pName, String pPrice, String pQty, String pExpdate, String pCategory,
+	public ProductVO(int pNo, String pName, int pPrice, int pQty, String pExpdate, String pCategory,
 			String pSubcategory) {
 		this.pNo = pNo;
 		this.pName = pName;
@@ -22,6 +26,15 @@ public class ProductVO {
 		this.pExpdate = pExpdate;
 		this.pCategory = pCategory;
 		this.pSubcategory = pSubcategory;
+	}
+	
+	public ProductVO(int pNo, String pName, int pPrice, int pQty, String pExpdate, int pSubcategoryInt) {
+		this.pNo = pNo;
+		this.pName = pName;
+		this.pPrice = pPrice;
+		this.pQty = pQty;
+		this.pExpdate = pExpdate;
+		this.pSubcategoryInt = pSubcategoryInt;
 	}
 
 	public int getpNo() {
@@ -40,19 +53,19 @@ public class ProductVO {
 		this.pName = pName;
 	}
 
-	public String getpPrice() {
+	public int getpPrice() {
 		return pPrice;
 	}
 
-	public void setpPrice(String pPrice) {
+	public void setpPrice(int pPrice) {
 		this.pPrice = pPrice;
 	}
 
-	public String getpQty() {
+	public int getpQty() {
 		return pQty;
 	}
 
-	public void setpQty(String pQty) {
+	public void setpQty(int pQty) {
 		this.pQty = pQty;
 	}
 
@@ -79,10 +92,14 @@ public class ProductVO {
 	public void setpSubcategory(String pSubcategory) {
 		this.pSubcategory = pSubcategory;
 	}
+	
+	public int getpSubcategoryInt() {
+		return pSubcategoryInt;
+	}
 
 	@Override
 	public String toString() {
-		return "BooksVO [" + pNo + " | " + pName + " | " + pPrice + " | " + pQty + " | "
+		return "ProductVO [" + pNo + " | " + pName + " | " + pPrice + " | " + pQty + " | "
 				+ pExpdate + " | " + pCategory + " | " + pSubcategory + "]";
 	} 
 
