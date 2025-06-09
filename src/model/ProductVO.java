@@ -99,7 +99,7 @@ public class ProductVO {
 
 	@Override
 	public String toString() {
-		return "ProductVO [" + pNo + " | " + pName + " | " + pPrice + " | " + pQty + " | "
+		return "[" + pNo + " | " + pName + " | " + pPrice + " | " + pQty + " | "
 				+ pExpdate + " | " + pCategory + " | " + pSubcategory + "]";
 	} 
 

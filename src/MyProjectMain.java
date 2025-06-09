@@ -3,6 +3,7 @@ import java.util.Scanner;
 import controller.ProductManager;
 import view.AdminMenuChoice;
 import view.Menu;
+import view.UserMenuChoice;
 
 public class MyProjectMain {
 	public static Scanner scan = new Scanner(System.in); 
@@ -17,16 +18,16 @@ public class MyProjectMain {
 				adminMenu();
 				break; 
 			case 2 :
+				userMenu();
 				break; 
 			case 3 : 
 				exitFlag = true; 
 				break; 
 			}
-		}//end of while
+		}
 		System.out.println("프로그램 종료");
 	}
 	
-	//도서관리 메뉴
 	public static void adminMenu() {
 		int choice = 0;
 		boolean exitFlag = false; 
@@ -69,6 +70,32 @@ public class MyProjectMain {
 				exitFlag = true; 
 				break; 
 			}
-		}//end of while
+		}
+	}
+	
+	public static void userMenu() {
+		int choice = 0;
+		boolean exitFlag = false; 
+		while(!exitFlag) {
+			Menu.userMenu();
+			choice = Integer.parseInt(scan.nextLine());
+			switch(choice) {
+			case UserMenuChoice.ADD_CART : 
+				ProductManager.productInsert();
+				break; 
+			case UserMenuChoice.DEL_CART :
+				ProductManager.productDelete();
+				break; 
+			case UserMenuChoice.CHK_AND_PAY : 
+				ProductManager.productList();
+				break; 
+			case UserMenuChoice.RECEIPT :
+				ProductManager.productSearch();
+				break; 
+			case UserMenuChoice.TO_MENU : 
+				exitFlag = true; 
+				break; 
+			}
+		}
 	}
 }

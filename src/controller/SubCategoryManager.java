@@ -17,7 +17,7 @@ public class SubCategoryManager {
 		}
 		System.out.println("");
 		System.out.println("───── 중분류 목록 ─────");
-		System.out.println("[  번호  |  항목\t]");
+		System.out.println("[  번호  |   대분류   |  항목\t]");
 		for (SubCategoryVO data : _subCategoryList) {
 			System.out.println(data.toString());
 		}

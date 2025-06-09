@@ -36,7 +36,7 @@ public class SubCategoryVO {
 	
 	@Override
 	public String toString() {
-		return "[   " + sNo + "\t| " + cName + " | " + sName + "\t]";
+		return "[   " + sNo + "\t|   " + cName + "   | " + sName + "\t]";
 	}
 
 	

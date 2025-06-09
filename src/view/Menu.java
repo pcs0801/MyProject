@@ -34,5 +34,17 @@ public class Menu{
 		System.out.println("――――――――――――――――――――――――");
 		System.out.print(" ▶ 번호입력 : ");
 	}
+	
+	public static void userMenu() {
+		System.out.println("");
+		System.out.println("―――――― Ｍ Ｅ Ｎ Ｕ ――――――");
+		System.out.println("   1.  장바구니 상품 담기");
+		System.out.println("   2.  장바구니 상품 삭제");
+		System.out.println("   3.  장바구니 확인 및 결제");
+		System.out.println("   4.  영수증 보기");
+		System.out.println("   5.  상위 메뉴로 돌아가기");
+		System.out.println("――――――――――――――――――――――――");
+		System.out.print(" ▶ 번호입력 : ");
+	}
 
 }

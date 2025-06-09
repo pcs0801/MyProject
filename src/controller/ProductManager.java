@@ -38,7 +38,7 @@ public class ProductManager {
 		String pExpdate = scan.nextLine();
 		
 		ArrayList<CategoryVO> cList = CategoryManager.categoryList();
-		System.out.print("카테고리명(대분류) :");
+		System.out.print("카테고리 번호 (대분류) :");
 		String pCategory = "";
 		int pCategoryInt = Integer.parseInt(scan.nextLine());
 		for(CategoryVO c : cList) {
@@ -48,7 +48,7 @@ public class ProductManager {
 		}
 		
 		ArrayList<SubCategoryVO> sList = SubCategoryManager.subCategoryList(pCategoryInt);
-		System.out.print("카테고리명(중분류) :");
+		System.out.print("카테고리 번호 (중분류) :");
 		String pSubcategory = "";
 		int pSubcategoryInt = Integer.parseInt(scan.nextLine());
 		for(SubCategoryVO s : sList) {
