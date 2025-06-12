@@ -10,6 +10,7 @@ public class ProductVO {
 	private String pSubcategory;
 	private int pCategoryInt; 
 	private int pSubcategoryInt;
+	private int totalPrice;
 	
 	
 	// Constructor
@@ -35,6 +36,13 @@ public class ProductVO {
 		this.pQty = pQty;
 		this.pExpdate = pExpdate;
 		this.pSubcategoryInt = pSubcategoryInt;
+	}
+	
+	public ProductVO(String pSubcategory, String pName, int pPrice, int pQty) {
+		this.pSubcategory = pSubcategory;
+		this.pName = pName;
+		this.pPrice = pPrice;
+		this.pQty = pQty;
 	}
 
 	public int getpNo() {

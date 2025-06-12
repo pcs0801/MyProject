@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import controller.CartManager;
 import controller.ProductManager;
 import view.AdminMenuChoice;
 import view.Menu;
@@ -81,16 +82,16 @@ public class MyProjectMain {
 			choice = Integer.parseInt(scan.nextLine());
 			switch(choice) {
 			case UserMenuChoice.ADD_CART : 
-				ProductManager.productInsert();
+				CartManager.cartInsert();
 				break; 
 			case UserMenuChoice.DEL_CART :
-				ProductManager.productDelete();
+				CartManager.cartDelete();
 				break; 
 			case UserMenuChoice.CHK_AND_PAY : 
-				ProductManager.productList();
+				CartManager.cartList();
 				break; 
 			case UserMenuChoice.RECEIPT :
-				ProductManager.productSearch();
+				CartManager.productSearch();
 				break; 
 			case UserMenuChoice.TO_MENU : 
 				exitFlag = true; 

@@ -22,7 +22,6 @@ public class ProductDAO {
 	private String orderByCategoryDescSQL = "SELECT * FROM PRODUCT ORDER BY P_CATEGORY DESC";
 	
 	// 멤버함수
-	// 도서정보목록
 	public ArrayList<ProductVO> selectAll() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -50,6 +49,37 @@ public class ProductDAO {
 
 			}
 
+		} catch (SQLException e) {
+			System.out.println("createStatement 오류 발생");
+		} finally {
+			DBUtil.dbClose(con, pstmt, rs);
+		}
+		return productList;
+	}
+	
+	public ArrayList<ProductVO> selectDistinct() {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<ProductVO> productList = new ArrayList<ProductVO>();
+		try {
+			con = DBUtil.getConnection();
+			if (con == null) {
+				System.out.println("DB 연결 문제 발생");
+				return null;
+			}
+			pstmt = con.prepareStatement(selectSQL);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				String pSubcategory = rs.getString("S_NAME");
+				String pName = rs.getString("P_NAME");
+				int pPrice = rs.getInt("P_PRICE");
+				int pQty = rs.getInt("P_QTY");
+				ProductVO productVO = new ProductVO(pSubcategory, pName, pPrice, pQty);
+				productList.add(productVO);
+			}
+			
 		} catch (SQLException e) {
 			System.out.println("createStatement 오류 발생");
 		} finally {
@@ -189,7 +219,6 @@ public class ProductDAO {
 		return count;
 	}
 
-	// 도서정보수정
 	public int update(ProductVO productVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -216,7 +245,6 @@ public class ProductDAO {
 		return count;
 	}
 
-	// 도서정보삭제
 	public int delete(ProductVO productVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
