@@ -1,11 +1,16 @@
 package model;
 
+
 public class CartVO {
 	private int cartItemNo; 
 	private int pNo; 
 	private int pQty; 
 	private int pPrice;
 	private int totalPrice;
+	private String pName;
+	private String pExpdate;
+	private String pCategory;
+	private String pSubcategory;
 	
 	public CartVO() {
 		super();
@@ -17,6 +22,24 @@ public class CartVO {
 		this.pQty = pQty;
 		this.pPrice = pPrice;
 		this.totalPrice = totalPrice;
+	}
+	
+	public CartVO(int cartItemNo, String pName, int pQty, int pPrice, int totalPrice) {
+		this.cartItemNo = cartItemNo;
+		this.pName = pName;
+		this.pQty = pQty;
+		this.pPrice = pPrice;
+		this.totalPrice = totalPrice;
+	}
+	
+	public CartVO(int pNo, String pName, int pPrice, int pQty, String pExpdate, String pCategory, String pSubcategory) {
+	    this.pNo = pNo;
+	    this.pName = pName;
+	    this.pPrice = pPrice;
+	    this.pQty = pQty;
+	    this.pExpdate = pExpdate;
+	    this.pCategory = pCategory;
+	    this.pSubcategory = pSubcategory;
 	}
 
 	public int getCartItemNo() {
@@ -33,6 +56,14 @@ public class CartVO {
 
 	public void setpNo(int pNo) {
 		this.pNo = pNo;
+	}
+	
+	public String getpName() {
+		return pName;
+	}
+	
+	public void setpName(String pName) {
+		this.pName = pName;
 	}
 
 	public int getpQty() {
