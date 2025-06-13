@@ -17,8 +17,22 @@ public class CartDAO {
 	private String insertSQL = "INSERT INTO CART(CART_ITEM_NO, P_NO, P_QTY, P_PRICE, TOTAL_PRICE) VALUES (CART_SEQ.NEXTVAL, ?, ?, ?, ?)";
 	private String updateSQL = "UPDATE CART SET P_NO = ?, P_QTY = ?, P_PRICE = ?, TOTAL_PRICE = ? WHERE CART_ITEM_NO = ?";
 	private String deleteSQL = "DELETE FROM CART WHERE CART_ITEM_NO = ?";
-	
+
 	// 멤버함수
+	public static void productList() {
+		ProductDAO productDAO = new ProductDAO();
+		ArrayList<ProductVO> _productList = productDAO.selectAll();
+		if (_productList.size() <= 0 || _productList == null) {
+			System.out.println("값이 없거나 오류가 발생하였습니다.");
+			return;
+		}
+		System.out.println(" 번호  |  제품명  |  가격  |  수량  ");
+		for (ProductVO data : _productList) {
+			System.out.println("  " + data.getpNo() + "  |  " + data.getpName() + "  |  " + data.getpPrice() + "  |  "
+					+ data.getpQty());
+		}
+	}
+
 	public ArrayList<CartVO> selectAll() {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -53,7 +67,6 @@ public class CartDAO {
 		}
 		return cartList;
 	}
-
 
 	public ArrayList<CartVO> selectByName(CartVO cartVO) {
 		Connection con = null;

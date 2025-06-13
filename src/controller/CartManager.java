@@ -1,10 +1,13 @@
 package controller;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.CartVO;
-import model.ProductVO;
 
 public class CartManager {
 	public static Scanner scan = new Scanner(System.in); 
@@ -19,20 +22,36 @@ public class CartManager {
 		for(CartVO data  : _cartList) {
 			System.out.println(data.toString());
 		}
-		
 	}
 	
-	public static void cartInsert() {
+	public static void cartInsert() throws SQLException{
 		CartDAO cartDAO = new CartDAO();
-		CartVO cartVO = null;
+		ProductDAO productDAO = new ProductDAO();
+		int cartItemNo = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
-		ProductDAO.selectDistinct();
-		System.out.print("상품명 입력 :");
-		String pName = scan.nextLine();
+		con = DBUtil.getConnection();
+		
+		cartDAO.productList();
+		System.out.print("상품번호 입력 :");
+		int pNo = Integer.parseInt(scan.nextLine());
+		pstmt = con.prepareStatement("SELECT P_PRICE FROM PRODUCT WHERE P_NO = ?");
+		pstmt.setInt(1, pNo);
+		rs = pstmt.executeQuery();
 		System.out.print("수량 입력 :");
 		int pQty = Integer.parseInt(scan.nextLine());
+		int pPrice = rs.getInt("P_PRICE"); 
+		int totalPrice = pPrice * pQty;
 		
-		cartVO = new CartVO(pName, pQty, 
+		CartVO cartVO = new CartVO(cartItemNo, pNo, pQty, pPrice, totalPrice);
+		
+		
+	}
+}
+		
+		/*cartVO = new CartVO(pName, pQty, 
 
 		int count = cartDAO.insert(cartVO);
 		if(count == 0) {
@@ -41,7 +60,9 @@ public class CartManager {
 			System.out.println("입력 성공");
 		}
 	}
+	*/
 	
+	/*
 	public static void cartUpdate() {
 		CartDAO cartDAO = new CartDAO();
 		CartVO cartVO = null;
@@ -93,4 +114,5 @@ public class CartManager {
 			System.out.println("삭제 성공");
 		}
 	}
+	*/
 	

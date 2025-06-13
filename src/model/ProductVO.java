@@ -29,6 +29,15 @@ public class ProductVO {
 		this.pSubcategory = pSubcategory;
 	}
 	
+	public ProductVO(int pNo, String pName, int pPrice, int pQty, String pExpdate, String pSubcategory) {
+		this.pNo = pNo;
+		this.pName = pName;
+		this.pPrice = pPrice;
+		this.pQty = pQty;
+		this.pExpdate = pExpdate;
+		this.pSubcategory = pSubcategory;
+	}
+	
 	public ProductVO(int pNo, String pName, int pPrice, int pQty, String pExpdate, int pSubcategoryInt) {
 		this.pNo = pNo;
 		this.pName = pName;

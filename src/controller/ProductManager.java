@@ -131,11 +131,12 @@ public class ProductManager {
 		
 		ArrayList<ProductVO> productList =  productDAO.selectByName(productVO);
 		if(productList.size() <= 0 || productList == null) {
-			System.out.println("책정보 검색에 오류가 발생했습니다.");
+			System.out.println("검색 오류가 발생했습니다.");
 			return; 
 		}
-		for(ProductVO data  : productList) {
-			System.out.println(data.toString());
+		System.out.println(" 번호  |  제품명  |  가격  |  수량  |  유통기한  ");
+		for(ProductVO data : productList) {
+			System.out.println("  " + data.getpNo() + "  |  " + data.getpName() + "  |  " + data.getpPrice() + "  |  " + data.getpQty() + "  |  " + data.getpExpdate() );
 		}
 	}
 	
@@ -146,8 +147,9 @@ public class ProductManager {
 			System.out.println("값이 없거나 오류가 발생하였습니다.");
 			return; 
 		}
-		for(ProductVO data  : _productList) {
-			System.out.println(data.toString());
+		System.out.println(" 분류번호 |  번호  |  제품명  |  가격  |  수량  |  유통기한  ");
+		for(ProductVO data : _productList) {
+			System.out.println("  " + data.getpSubcategoryInt() + "   |  " + data.getpNo() + "  |  " + data.getpName() + "  |  " + data.getpPrice() + "  |  " + data.getpQty() + "  |  " + data.getpExpdate() );
 		}
 		
 	}
@@ -159,8 +161,9 @@ public class ProductManager {
 			System.out.println("값이 없거나 오류가 발생하였습니다.");
 			return; 
 		}
-		for(ProductVO data  : _productList) {
-			System.out.println(data.toString());
+		System.out.println(" 분류번호 |  번호  |  제품명  |  가격  |  수량  |  유통기한  ");
+		for(ProductVO data : _productList) {
+			System.out.println("  " + data.getpSubcategoryInt() + "   |  " + data.getpNo() + "  |  " + data.getpName() + "  |  " + data.getpPrice() + "  |  " + data.getpQty() + "  |  " + data.getpExpdate() );
 		}
 		
 	}

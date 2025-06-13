@@ -11,15 +11,16 @@ import model.ProductVO;
 public class ProductDAO {
 	// 디생
 	// 멤버변수
-	private String selectSQL = "SELECT P.P_NO, P.P_NAME, P.P_PRICE, P.P_QTY, P.P_EXPDATE, C.C_NAME, S.S_NAME FROM PRODUCT P, S_CATEGORY S, \"CATEGORY\" C \r\n"
-			+ "WHERE P.P_SUBCATEGORY_NO = S.S_NO \r\n"
+	private String selectSQL = "SELECT P.P_NO, P.P_NAME, P.P_PRICE, P.P_QTY, P.P_EXPDATE, C.C_NAME, S.S_NAME FROM PRODUCT P, S_CATEGORY S, \"CATEGORY\" C\r\n"
+			+ "WHERE P.P_SUBCATEGORY_NO = S.S_NO\r\n"
 			+ "AND S.C_NO = C.C_NO ORDER BY P.P_NO";
-	private String selectNameSQL = "SELECT *  FROM PRODUCT WHERE P_NAME = ?";
+	private String selectNameSQL = "SELECT * FROM PRODUCT WHERE P_NAME = ?";
 	private String insertSQL = "INSERT INTO PRODUCT(P_NO, P_NAME, P_PRICE, P_QTY, P_EXPDATE, P_SUBCATEGORY_NO) VALUES (PRODUCT_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
 	private String updateSQL = "UPDATE PRODUCT SET P_NAME = ?, P_PRICE = ?, P_QTY = ?, P_EXPDATE = ?, P_CATEGORY = ?, P_SUBCATEGORY = ? WHERE P_NAME = ?";
 	private String deleteSQL = "DELETE FROM PRODUCT WHERE P_NO = ?";
-	private String orderByCategoryAscSQL = "SELECT * FROM PRODUCT ORDER BY P_CATEGORY ASC";
-	private String orderByCategoryDescSQL = "SELECT * FROM PRODUCT ORDER BY P_CATEGORY DESC";
+	private String orderByCategoryAscSQL = "SELECT * FROM PRODUCT ORDER BY P_SUBCATEGORY_NO ASC";
+	private String orderByCategoryDescSQL = "SELECT * FROM PRODUCT ORDER BY P_SUBCATEGORY_NO DESC";
+	private String selectDistinctSQL = "SELECT P_NAME, SUM(P_QTY) FROM PRODUCT GROUP BY P_NAME";
 	
 	// 멤버함수
 	public ArrayList<ProductVO> selectAll() {
@@ -68,7 +69,7 @@ public class ProductDAO {
 				System.out.println("DB 연결 문제 발생");
 				return null;
 			}
-			pstmt = con.prepareStatement(selectSQL);
+			pstmt = con.prepareStatement(selectDistinctSQL);
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
@@ -109,9 +110,8 @@ public class ProductDAO {
 				int pPrice = rs.getInt("P_PRICE");
 				int pQty = rs.getInt("P_QTY");
 				String pExpdate = rs.getString("P_EXPDATE");
-				String pCategory = rs.getString("P_CATEGORY");
-				String pSubcategory = rs.getString("P_SUBCATEGORY");
-				ProductVO productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pCategory, pSubcategory);
+				int pSubcategoryInt = rs.getInt("P_SUBCATEGORY_NO");
+				ProductVO productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pSubcategoryInt);
 				productList.add(productVO);
 
 			}
@@ -144,9 +144,8 @@ public class ProductDAO {
 				int pPrice = rs.getInt("P_PRICE");
 				int pQty = rs.getInt("P_QTY");
 				String pExpdate = rs.getString("P_EXPDATE");
-				String pCategory = rs.getString("P_CATEGORY");
-				String pSubcategory = rs.getString("P_SUBCATEGORY");
-				ProductVO productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pCategory, pSubcategory);
+				int pSubcategoryInt = rs.getInt("P_SUBCATEGORY_NO");
+				ProductVO productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pSubcategoryInt);
 				productList.add(productVO);
 
 			}
@@ -163,7 +162,7 @@ public class ProductDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<ProductVO> booksList = new ArrayList<ProductVO>();
+		ArrayList<ProductVO> productList = new ArrayList<ProductVO>();
 		try {
 			con = DBUtil.getConnection();
 			if (con == null) {
@@ -180,10 +179,9 @@ public class ProductDAO {
 				int pPrice = rs.getInt("P_PRICE");
 				int pQty = rs.getInt("P_QTY");
 				String pExpdate = rs.getString("P_EXPDATE");
-				String pCategory = rs.getString("P_CATEGORY");
-				String pSubcategory = rs.getString("P_SUBCATEGORY");
-				ProductVO _productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pCategory, pSubcategory);
-				booksList.add(_productVO);
+				int pSubcategoryInt = rs.getInt("P_SUBCATEGORY_NO");
+				ProductVO _productVO = new ProductVO(pNo, pName, pPrice, pQty, pExpdate, pSubcategoryInt);
+				productList.add(_productVO);
 			}
 
 		} catch (SQLException e) {
@@ -191,7 +189,7 @@ public class ProductDAO {
 		} finally {
 			DBUtil.dbClose(con, pstmt, rs);
 		}
-		return booksList;
+		return productList;
 	}
 
 	public int insert(ProductVO productVO) {

@@ -1,6 +1,9 @@
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import controller.CartManager;
+import controller.DBUtil;
 import controller.ProductManager;
 import view.AdminMenuChoice;
 import view.Menu;
@@ -8,9 +11,15 @@ import view.UserMenuChoice;
 
 public class MyProjectMain {
 	public static Scanner scan = new Scanner(System.in); 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		Connection con = DBUtil.getConnection();
 		int choice = 0;
 		boolean exitFlag = false; 
+		
+		if (con == null) {
+			System.out.println("DB 연결 실패");
+			return;
+		}
 		while(!exitFlag) {
 			Menu.mainMenu();
 			choice = Integer.parseInt(scan.nextLine());
@@ -74,7 +83,7 @@ public class MyProjectMain {
 		}
 	}
 	
-	public static void userMenu() {
+	public static void userMenu() throws SQLException {
 		int choice = 0;
 		boolean exitFlag = false; 
 		while(!exitFlag) {
@@ -85,13 +94,13 @@ public class MyProjectMain {
 				CartManager.cartInsert();
 				break; 
 			case UserMenuChoice.DEL_CART :
-				CartManager.cartDelete();
+				CartManager.cartInsert();
 				break; 
 			case UserMenuChoice.CHK_AND_PAY : 
 				CartManager.cartList();
 				break; 
 			case UserMenuChoice.RECEIPT :
-				CartManager.productSearch();
+				CartManager.cartList();
 				break; 
 			case UserMenuChoice.TO_MENU : 
 				exitFlag = true; 
