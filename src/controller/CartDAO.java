@@ -14,7 +14,7 @@ public class CartDAO {
 	// 멤버변수
 	private String selectSQL = "SELECT C.CART_ITEM_NO, P.P_NO, P.P_NAME, C.P_QTY, C.P_PRICE, C.TOTAL_PRICE FROM CART C JOIN PRODUCT P ON P.P_NO = C.P_NO WHERE DEL_YN = 0";
 	private String selectNameSQL = "SELECT P_NAME, SUM(P_QTY) FROM PRODUCT WHERE P_NAME = ? GROUP BY P_NAME";
-	private String insertSQL = "INSERT INTO CART(P_NO, P_QTY, P_PRICE, TOTAL_PRICE) VALUES (?, ?, ?, ?)";
+	private String insertSQL = "INSERT INTO CART(CART_ITEM_NO, P_NO, P_QTY, P_PRICE, TOTAL_PRICE, DEL_YN) VALUES (CART_SEQ.NEXTVAL, ?, ?, ?, ?, 0)";
 	private String updateSQL = "UPDATE CART SET P_NO = ?, P_QTY = ?, P_PRICE = ?, TOTAL_PRICE = ? WHERE CART_ITEM_NO = ?";
 	private String deleteSQL = "DELETE FROM CART WHERE CART_ITEM_NO = ?";
 
@@ -145,11 +145,11 @@ public class CartDAO {
 				return -1;
 			}
 			pstmt = con.prepareStatement(updateSQL);
-			pstmt.setInt(1, cartVO.getCartItemNo());
-			pstmt.setInt(2, cartVO.getpNo());
-			pstmt.setInt(3, cartVO.getpQty());
-			pstmt.setInt(4, cartVO.getpPrice());
-			pstmt.setInt(5, cartVO.getTotalPrice());
+			pstmt.setInt(1, cartVO.getpNo());
+			pstmt.setInt(2, cartVO.getpQty());
+			pstmt.setInt(3, cartVO.getpPrice());
+			pstmt.setInt(4, cartVO.getTotalPrice());
+			pstmt.setInt(5, cartVO.getCartItemNo());
 			count = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("createStatement 오류 발생");

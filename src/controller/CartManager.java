@@ -10,15 +10,18 @@ import java.util.Scanner;
 import model.CartVO;
 
 public class CartManager {
+	int receiptCounter = 1;
 	public static Scanner scan = new Scanner(System.in);
 
-	public static ArrayList<CartVO> cartList() {
+	public ArrayList<CartVO> cartList() {
 		CartDAO cartDAO = new CartDAO();
 		ArrayList<CartVO> _cartList = cartDAO.selectAll();
-		if (_cartList.size() <= 0 || _cartList == null) {
+
+		if (_cartList == null || _cartList.isEmpty()) {
 			System.out.println("장바구니에 제품이 없습니다.");
 			return null;
 		}
+
 		for (CartVO data : _cartList) {
 			System.out.println("[" + data.getCartItemNo() + "] " + data.getpName() + " | " + data.getpQty() + "개 | 단가: "
 					+ data.getpPrice() + " | 총액: " + data.getTotalPrice() + "원");
@@ -26,7 +29,7 @@ public class CartManager {
 		return _cartList;
 	}
 
-	public static void cartInsert() throws SQLException {
+	public void cartInsert() throws SQLException {
 		CartDAO cartDAO = new CartDAO();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -92,91 +95,108 @@ public class CartManager {
 	 * System.out.println("수정 문제 발생"); }else { System.out.println("수정 성공"); } }
 	 */
 
-	public static void cartDelete() {
-		CartDAO cartDAO = new CartDAO();
-		Scanner scan = new Scanner(System.in);
-
-		cartList();
-
-		System.out.print("삭제할 제품번호 입력: ");
-		int cartItemNo = Integer.parseInt(scan.nextLine());
-
-		CartVO cartVO = new CartVO();
-		cartVO.setCartItemNo(cartItemNo);
-		int count = cartDAO.delete(cartVO);
-
-		if (count > 0) {
-			System.out.println("장바구니 삭제 성공");
-		} else {
-			System.out.println("장바구니 삭제 실패");
-		}
-	}
-
-	public static void cartPurchase() {
+	public void cartDelete() {
 		CartDAO cartDAO = new CartDAO();
 		Scanner scan = new Scanner(System.in);
 		boolean stopFlag = false;
-		int total = 0;
-		
-		ArrayList<CartVO> _cartList = cartList();
-		
-		for (CartVO data : _cartList) {
-			total += (data.getpQty() * data.getpPrice());
-		}
-		
-		System.out.println("총계 : " + total + "원");
 
 		while (!stopFlag) {
-			System.out.println("결제 여부 : 결제(1) / 취소(0)");
-			System.out.print(" ▶ 번호입력 : ");
-			int purChoice = Integer.parseInt(scan.nextLine());
+			cartList();
+			System.out.println("● 메뉴로 돌아가기(0 입력)");
 
-			if (purChoice == 1) {
-				// DELETE FROM CART
-				Connection con = null;
-				PreparedStatement pstmt = null;
-				try {
-					con = DBUtil.getConnection();
-					if (con == null) {
-						System.out.println("DB 연결 문제 발생");
-					}
-					pstmt = con.prepareStatement("UPDATE CART SET DEL_YN = 1 WHERE DEL_YN = 0");
-					int count = pstmt.executeUpdate();
-					if (count >= 1) {
-						int count2 = 0;
-						for (CartVO data : _cartList) {
-							pstmt = con.prepareStatement("UPDATE PRODUCT SET P_QTY = (P_QTY - ?) WHERE P_NO = ?");
-							
-							pstmt.setInt(1, data.getpQty());
-							pstmt.setInt(2, data.getpNo());
-							count2 += pstmt.executeUpdate();
-						}
+			System.out.print("삭제할 제품번호 입력: ");
+			int cartItemNo = Integer.parseInt(scan.nextLine());
 
-						System.out.println("결제 완료("+count2+"건)");
-					} else {
-						System.out.println("결제 실패");
-					}
-				} catch (SQLException e) {
-					System.out.println("createStatement 오류 발생");
-				} finally {
-					DBUtil.dbClose(con, pstmt);
-				}
+			CartVO cartVO = new CartVO();
+			cartVO.setCartItemNo(cartItemNo);
+			int count = cartDAO.delete(cartVO);
+
+			if (count > 0) {
+				System.out.println("장바구니 삭제 성공");
+			}
+			if (cartItemNo == 0) {
 				stopFlag = true;
-			} else if (purChoice == 0) {
-				System.out.println("결제취소");
-				stopFlag = true;
-			} else {
-				System.out.println("제대로 입력해주세요. (0 또는 1)");
 			}
 		}
-//		CartVO cartVO = new CartVO();
-//		cartVO.setCartItemNo(cartItemNo);
-//		int count = cartDAO.delete(cartVO);
-//
-//		if (count > 0) {
-//			System.out.println("장바구니 삭제 성공");
-//		} else {
-//			System.out.println("장바구니 삭제 실패");
-//		}
+	}
+
+	public void cartPurchase() {
+		ArrayList<CartVO> _cartList = cartList();
+		if (_cartList == null)
+			return;
+
+		int total = 0;
+		for (CartVO data : _cartList) {
+			total += data.getTotalPrice();
+		}
+		System.out.println("총 결제 금액: " + total + "원");
+		System.out.print("결제하시겠습니까? (1=예, 0=아니오): ");
+		int choice = Integer.parseInt(scan.nextLine());
+		if (choice != 1) {
+			System.out.println("결제 취소됨");
+			return;
+		}
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		try {
+			con = DBUtil.getConnection();
+
+			pstmt = con.prepareStatement(
+					"UPDATE CART SET DEL_YN = 1, RECEIPT_NO = ?, PAYMENT_DAY = SYSDATE WHERE DEL_YN = 0");
+			pstmt.setInt(1, receiptCounter);
+			int count = pstmt.executeUpdate();
+			System.out.println("결제 완료, 영수증 번호: " + receiptCounter);
+
+			for (CartVO data : _cartList) {
+				pstmt = con.prepareStatement("UPDATE PRODUCT SET P_QTY = P_QTY - ? WHERE P_NO = ?");
+				pstmt.setInt(1, data.getpQty());
+				pstmt.setInt(2, data.getpNo());
+				pstmt.executeUpdate();
+			}
+
+			receiptCounter++;
+
+		} catch (SQLException e) {
+			System.out.println("결제 오류");
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(con, pstmt);
+		}
+	}
+	
+	public void showReceipt() {
+		System.out.print("확인할 영수증 번호 입력: ");
+		int no = Integer.parseInt(scan.nextLine());
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			con = DBUtil.getConnection();
+			pstmt = con.prepareStatement("SELECT P_NO, P_QTY, P_PRICE, TOTAL_PRICE, PAYMENT_DAY FROM CART WHERE RECEIPT_NO = ?");
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+
+			boolean found = false;
+			int sum = 0;
+			System.out.println("── 영수증 번호 : " + no + " ──");
+			while (rs.next()) {
+				found = true;
+				System.out.println("상품번호: " + rs.getInt("P_NO") + " | 수량: " + rs.getInt("P_QTY") +
+					" | 단가: " + rs.getInt("P_PRICE") + " | 합계: " + rs.getInt("TOTAL_PRICE"));
+				sum += rs.getInt("TOTAL_PRICE");
+			}
+			if (found) {
+				System.out.println("총 결제금액: " + sum + "원");
+			} else {
+				System.out.println("해당 영수증이 없습니다.");
+			}
+		} catch (Exception e) {
+			System.out.println("영수증 조회 오류");
+			e.printStackTrace();
+		} finally {
+			DBUtil.dbClose(con, pstmt, rs);
+		}
 	}
 }

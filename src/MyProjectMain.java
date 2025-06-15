@@ -76,8 +76,6 @@ public class MyProjectMain {
 					}
 				}
 				break;
-			case AdminMenuChoice.P_CUMSALES:
-				break;
 			case AdminMenuChoice.TO_MENU:
 				exitFlag = true;
 				break;
@@ -87,22 +85,23 @@ public class MyProjectMain {
 
 	public static void userMenu() throws SQLException {
 		int choice = 0;
+		CartManager cartManager = new CartManager();
 		boolean exitFlag = false;
 		while (!exitFlag) {
 			Menu.userMenu();
 			choice = Integer.parseInt(scan.nextLine());
 			switch (choice) {
 			case UserMenuChoice.ADD_CART:
-				CartManager.cartInsert();
+				cartManager.cartInsert();
 				break;
 			case UserMenuChoice.DEL_CART:
-				CartManager.cartDelete();
+				cartManager.cartDelete();
 				break;
 			case UserMenuChoice.CHK_AND_PAY:
-				CartManager.cartPurchase();
+				cartManager.cartPurchase();
 				break;
 			case UserMenuChoice.RECEIPT:
-				CartManager.cartList();
+				cartManager.showReceipt();
 				break;
 			case UserMenuChoice.TO_MENU:
 				exitFlag = true;
