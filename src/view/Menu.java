@@ -19,8 +19,7 @@ public class Menu{
 		System.out.println("   3.  재고 현황"); 
 		System.out.println("   4.  재고 검색");
 		System.out.println("   5.  재고 정렬"); 
-		System.out.println("   6.  누적 매출"); 
-		System.out.println("   7.  상위 메뉴로 돌아가기");
+		System.out.println("   6.  상위 메뉴로 돌아가기");
 		System.out.println("――――――――――――――――――――――――");
 		System.out.print(" ▶ 번호입력 : ");
 	}

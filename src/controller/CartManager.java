@@ -166,6 +166,7 @@ public class CartManager {
 	}
 	
 	public void showReceipt() {
+		
 		System.out.print("확인할 영수증 번호 입력: ");
 		int no = Integer.parseInt(scan.nextLine());
 
