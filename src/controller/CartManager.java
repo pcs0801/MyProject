@@ -165,14 +165,27 @@ public class CartManager {
 		}
 	}
 	
-	public void showReceipt() {
+	public void showReceipt() throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmtReceipt = null;
+		con = DBUtil.getConnection();
+		ResultSet rsReceipt = null;
+		
+		pstmtReceipt = con.prepareStatement("SELECT RECEIPT_NO, SUM(TOTAL_PRICE) FROM CART GROUP BY RECEIPT_NO");
+		rsReceipt = pstmtReceipt.executeQuery();
+		
+		System.out.println("번호" + "  |  " + "총액");
+		while(rsReceipt.next()) {
+			System.out.println(rsReceipt.getInt("RECEIPT_NO") + "  |  " + rsReceipt.getInt("SUM(TOTAL_PRICE)") + "원");
+		}
+		 
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
 		System.out.print("확인할 영수증 번호 입력: ");
 		int no = Integer.parseInt(scan.nextLine());
 
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		try {
 			con = DBUtil.getConnection();
 			pstmt = con.prepareStatement("SELECT P_NO, P_QTY, P_PRICE, TOTAL_PRICE, PAYMENT_DAY FROM CART WHERE RECEIPT_NO = ?");
